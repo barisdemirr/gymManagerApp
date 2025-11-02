@@ -1,0 +1,113 @@
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #2e2e2e 0%, #1a1a1a 100%);
+}
+
+.container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container-item-1 {
+ width: 60%;
+}
+
+.item-1-next-1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 70px;
+}
+
+#add-sub-button {
+    border: 2px solid #fff;
+    background: transparent;
+    color: white;
+    height: 70px;
+    width: 140px;
+    cursor: pointer;
+    transition: .4s;
+    font-size: 18px;
+    border-radius: 35px;
+    margin-left: 10px;
+}
+
+#add-sub-button:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+#delete-all-subs-button {
+    border: 2px solid #ce0000;
+    background: transparent;
+    color: rgb(255, 0, 0);
+    height: 70px;
+    width: 140px;
+    cursor: pointer;
+    transition: .4s;
+    font-size: 16px;
+    border-radius: 35px;
+    margin-right: 10px;
+}
+
+#delete-all-subs-button:hover {
+    background-color: #ce0000;
+    color: #000;
+}
+
+.grid-div {
+    display: grid;
+    grid-template-columns: 300px 300px;
+    row-gap: 50px;
+    column-gap: 20px;
+    grid-auto-columns: 200px;
+     grid: 150px;
+}
+
+.grid-div div{
+    background-color: #024d80;
+    height: auto;
+    border-radius: 15px;
+}
+
+.item-1-next-2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+
+.remove-button-div {
+    width: 100%;
+}
+
+.remove-button{
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: #ddd;
+    transition: .3s ease-in-out;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    margin-top: 20px;
+}
+
+.remove-button:hover {
+    background-color: #ddd;
+    color: #000;
+}
+
+.card-title {
+    color: white;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+
+.p-tags {
+    color: #ddd;
+    margin-left: 10px;
+}
+
+

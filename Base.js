@@ -55,6 +55,7 @@ class GymBase {
         let oldSub = this.FeeDeterminer(false, this.period);
         this.subList.push(oldSub);
         localStorage.setItem("subList", JSON.stringify(this.subList));
+        location.reload();
     }
 
 
@@ -64,6 +65,7 @@ class GymBase {
         let newSub = this.FeeDeterminer(true, this.period);
         this.subList.push(newSub);
         localStorage.setItem("subList", JSON.stringify(this.subList));
+        location.reload();
     }
 
 
@@ -120,4 +122,7 @@ class GymBase {
         return sub;
 
     }
+
+
+
 }

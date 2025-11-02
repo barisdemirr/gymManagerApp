@@ -7,4 +7,5 @@ class Subscriber extends GymBase {
     AddSub() {
         super.AddSub();
     }
+
 }
