@@ -8,4 +8,7 @@ class Subscriber extends GymBase {
         super.AddSub();
     }
 
+    PageLoaded(){
+        super.PageLoaded();
+    }
 }

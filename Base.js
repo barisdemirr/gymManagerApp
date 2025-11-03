@@ -18,7 +18,7 @@ class GymBase {
         let isNewSub = true;
 
         this.subList.forEach(function (subFullName) {
-            if (subFullName.fullname == fullname) {
+            if (subFullName.fullname.toLowerCase() == fullname.toLowerCase()) {
                 isNewSub = false;
             }
 
@@ -32,8 +32,8 @@ class GymBase {
                 this.UpdateOldSub(fullname);
             }
         } else {
-            // we must give a error message
-            console.log("Something went wrong!");
+            // we must give an error message
+            alert("Something went wrong!");
         }
 
     }
@@ -52,9 +52,11 @@ class GymBase {
 
         this.subList.splice(subIndex, 1); // Deleted the old user.
 
-        let oldSub = this.FeeDeterminer(false, this.period);
+        let oldSub = this.SubCreator(this.FeeDeterminer(false, this.period));
         this.subList.push(oldSub);
         localStorage.setItem("subList", JSON.stringify(this.subList));
+
+        //Refresh the page 
         location.reload();
     }
 
@@ -62,13 +64,16 @@ class GymBase {
 
     AddNewSub() {
         this.CheckSubList();
-        let newSub = this.FeeDeterminer(true, this.period);
+        let newSub = this.SubCreator(this.FeeDeterminer(true, this.period));
         this.subList.push(newSub);
         localStorage.setItem("subList", JSON.stringify(this.subList));
+        
+        //Refresh the page 
         location.reload();
     }
 
 
+    // İf localStorage don't have subList, create new one as empty. Else, get subList.
     CheckSubList() {
         if (localStorage.getItem("subList") === null) {
             this.subList = [];
@@ -97,15 +102,17 @@ class GymBase {
                 break;
         }
 
+        // İf sub is new one, apply 15% discount.
         if (isNewSub) {
             let fee = normalFee * (100 - discountRate) / 100;
-            return this.SubCreator(fee);
+            return fee;
         } else {
-            return this.SubCreator(normalFee);
+            return normalFee;
         }
     }
 
 
+    // Create a new subscriber
     SubCreator(fee) {
         let period = this.period;
         let fullname = `${this.name} ${this.lastname}`;
@@ -124,5 +131,42 @@ class GymBase {
     }
 
 
+    PageLoaded() {
+        this.CheckSubList();
+
+        
+        const mainGrid = document.querySelector(".grid-div");
+        
+        this.subList.forEach(sub => {
+            const gridItem = document.createElement("div");
+            gridItem.className = "grid-item";
+
+            // if period is one month, don't write "one months"
+            let monthText = "Months";
+            if (sub.period == 1){
+                monthText = "Month";
+            }
+
+            // Create a new card
+            const cardContent = `
+                <div>
+                    <h2 class="card-title">${sub.fullname}</h2>
+                </div>
+                <div>
+                    <p class="p-tags">Subscription Length: ${sub.period} ${monthText}</p>
+                    <p class="p-tags">Bill: ${sub.fee} TL</p>
+                    <p class="p-tags">Starting Date: ${sub.date}</p>
+                </div>
+                <div class="remove-button-div">
+                    <button class="remove-button">Remove</button>
+                </div>
+            `;
+
+            gridItem.innerHTML = cardContent;
+            mainGrid.appendChild(gridItem);
+
+
+        })
+    }
 
 }
