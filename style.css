@@ -38,8 +38,28 @@ body {
     color: #000;
 }
 
+#update-prices-button {
+    border: 2px solid #d0ee4c;
+    background: transparent;
+    color: #d0ee4c;
+    height: 70px;
+    width: 140px;
+    cursor: pointer;
+    transition: .4s;
+    font-size: 18px;
+    border-radius: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#update-prices-button:hover {
+    background-color: #d0ee4c;
+    color: #000;
+}
+
 #delete-all-subs-button {
-    border: 2px solid #ce0000;
+    border: 3px solid #ce0000;
+    font-weight: bold;
     background: transparent;
     color: rgb(255, 0, 0);
     height: 70px;
@@ -53,7 +73,7 @@ body {
 
 #delete-all-subs-button:hover {
     background-color: #ce0000;
-    color: #000;
+    color: #fff;
 }
 
 .grid-div {
@@ -71,18 +91,18 @@ body {
     border-radius: 15px;
 }
 
-.item-1-next-2 {
+.item-1-next-3 {
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 
-.remove-button-div {
+.delete-button-div {
     width: 100%;
 }
 
-.remove-button{
+.delete-button{
     width: 100%;
     height: 40px;
     background: transparent;
@@ -92,9 +112,10 @@ body {
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     margin-top: 20px;
+    cursor: pointer;
 }
 
-.remove-button:hover {
+.delete-button:hover {
     background-color: #ddd;
     color: #000;
 }
@@ -111,3 +132,31 @@ body {
 }
 
 
+.item-1-next-2{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+
+#search-input {
+    all: unset;
+    width: 400px;
+    height: 36px;
+    background-color: #fff;
+    padding: 10px;
+    padding-left: 20px;
+    border-radius: 35px;
+    font-size: 19px;
+    border: 4px solid transparent;
+    transition: .5s;
+}
+
+#search-input:focus {
+    border-color: #2cb909;
+}
+
+#no-subs-text{
+    display: none;
+    color: #ddd;
+}

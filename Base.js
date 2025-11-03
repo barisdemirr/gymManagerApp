@@ -45,12 +45,13 @@ class GymBase {
 
         let arrayOfFullnames = [];
         this.subList.forEach(value => {
-            arrayOfFullnames.push(value.fullname);
+            arrayOfFullnames.push(value.fullname.toLowerCase());
         })
 
-        let subIndex = arrayOfFullnames.indexOf(fullname); // If array don't have value, it will return -1.
+        let subIndex = arrayOfFullnames.indexOf(fullname.toLowerCase()); // If array don't have value, it will return -1.
 
-        this.subList.splice(subIndex, 1); // Deleted the old user.
+        // Deleted the old user.
+        this.subList.splice(subIndex, 1); 
 
         let oldSub = this.SubCreator(this.FeeDeterminer(false, this.period));
         this.subList.push(oldSub);
@@ -117,9 +118,11 @@ class GymBase {
         let period = this.period;
         let fullname = `${this.name} ${this.lastname}`;
         let date = this.date
+        let id = this.IDGenerator();
 
 
         let sub = {
+            id: id,
             fullname: fullname,
             period: period,
             fee: fee,
@@ -157,8 +160,8 @@ class GymBase {
                     <p class="p-tags">Bill: ${sub.fee} TL</p>
                     <p class="p-tags">Starting Date: ${sub.date}</p>
                 </div>
-                <div class="remove-button-div">
-                    <button class="remove-button">Remove</button>
+                <div class="delete-button-div">
+                    <button class="delete-button" data-id="${sub.id}">Delete</button>
                 </div>
             `;
 
@@ -169,4 +172,56 @@ class GymBase {
         })
     }
 
+
+    IDGenerator(){
+        this.CheckSubList();
+        let IDList = [];
+        
+        this.subList.forEach(sub => IDList.push(sub.id));
+
+        for(let i=0; i<IDList.length+1; i++){
+            if (IDList.includes(i)){
+                continue;
+            }else{
+                return i;
+            }
+        }
+    }
+
+    DeleteSub(deleteButton){
+        console.log(deleteButton);
+        this.CheckSubList();
+        let deleteButtonID = deleteButton.dataset.id;
+
+        //Delete from FrontEnd
+        deleteButton.parentElement.parentElement.remove();
+
+        //Delete from BackEnd
+        this.subList.forEach(sub=>{
+            if (sub.id == deleteButtonID){
+                this.DeleteFromStorage(deleteButtonID);
+            }
+        })
+    }
+
+
+    DeleteFromStorage(ID){
+        this.CheckSubList();
+
+        this.subList.forEach((sub,index)=>{
+            if (ID == sub.id){
+                this.subList.splice(index,1);
+                localStorage.setItem("subList", JSON.stringify(this.subList));
+            }
+        });
+    }
+
+
+    DeleteAllSubs(){
+        let newSubList = [];
+
+        localStorage.setItem("subList", JSON.stringify(newSubList));
+
+        location.reload();
+    }
 }

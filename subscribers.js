@@ -11,4 +11,12 @@ class Subscriber extends GymBase {
     PageLoaded(){
         super.PageLoaded();
     }
+
+    DeleteSub(deleteButton){
+        super.DeleteSub(deleteButton);
+    }
+
+    DeleteAllSubs(){
+        super.DeleteAllSubs();
+    }
 }
