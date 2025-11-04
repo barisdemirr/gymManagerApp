@@ -19,4 +19,12 @@ class Subscriber extends GymBase {
     DeleteAllSubs(){
         super.DeleteAllSubs();
     }
+
+    UpdatePrice(packageName, newPrice){
+        super.UpdatePrice(packageName, newPrice);
+    }
+
+    FilterSub(filterValue){
+        super.FilterSub(filterValue);
+    }
 }

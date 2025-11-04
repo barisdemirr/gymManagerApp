@@ -155,8 +155,3 @@ body {
 #search-input:focus {
     border-color: #2cb909;
 }
-
-#no-subs-text{
-    display: none;
-    color: #ddd;
-}

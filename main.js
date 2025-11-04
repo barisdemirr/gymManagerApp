@@ -1,11 +1,14 @@
+// HTML OBJECTS
 const addSubButton = document.querySelector("#add-sub-button");
 const dataRemove = document.querySelector(".remove-button");
 const searchInput = document.querySelector("#search-input");
 const allSubsOnScreen = document.querySelector(".grid-div");
 const deleteAllSubs = document.querySelector("#delete-all-subs-button");
+const updatePricesButton = document.querySelector("#update-prices-button");
 
-let subList = [];
 
+
+// FUNCTIONS
 
 const AddSub = () => {
     let name = prompt("What is name of sub?");
@@ -23,6 +26,8 @@ const AddSub = () => {
         }else{
             alert("Please choose a true package.");
         }
+    }else{
+        alert("Something went wrong!");
     }
 
 }
@@ -49,6 +54,29 @@ function DeleteAllSubs() {
     }
 }
 
+const UpdatePrice = ()=>{
+    let packageName = prompt("Which package do you want to update?\n(package + Month)");
+
+    if (packageName=="package1" || packageName=="package3" || packageName=="package6" || packageName=="package12"){
+        let newPrice = prompt("Enter new price.\nThis process dont't affect old subscribers!");
+
+        const sub = new Subscriber();
+        sub.UpdatePrice(packageName, newPrice);
+    }else{
+        alert("Please enter a true package number.");
+    }
+}
+
+
+const FilterSub = e =>{
+    const sub = new Subscriber();
+    sub.FilterSub(e.target.value);
+}
+
+
+
+
+// EVENTS
 
 addSubButton.addEventListener("click", AddSub);
 
@@ -57,3 +85,7 @@ document.addEventListener("DOMContentLoaded", PageLoaded);
 allSubsOnScreen.addEventListener("click", DeleteSub);
 
 deleteAllSubs.addEventListener("click", DeleteAllSubs)
+
+updatePricesButton.addEventListener("click", UpdatePrice);
+
+searchInput.addEventListener("keyup", FilterSub);

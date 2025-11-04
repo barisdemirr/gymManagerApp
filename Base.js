@@ -1,7 +1,6 @@
 class GymBase {
 
-    subList = [];
-
+    priceList = [];
 
 
     constructor(name, lastname, period, date) {
@@ -13,49 +12,44 @@ class GymBase {
 
 
     AddSub() {
-        this.CheckSubList();
+        let subList = this.CheckSubList();
         let fullname = `${this.name} ${this.lastname}`;
         let isNewSub = true;
 
-        this.subList.forEach(function (subFullName) {
+        subList.forEach(function (subFullName) {
+            // If sub already exists, isNewSub will be false
             if (subFullName.fullname.toLowerCase() == fullname.toLowerCase()) {
                 isNewSub = false;
-            }
-
+            };
         })
 
-        if (this.name != "" & this.name != null & this.lastname != "" & this.lastname != null & this.period != "" & this.period != null) {
-            //We can add sub
-            if (isNewSub) {
-                this.AddNewSub();
-            } else {
-                this.UpdateOldSub(fullname);
-            }
+        
+        if (isNewSub) {
+            this.AddNewSub();
         } else {
-            // we must give an error message
-            alert("Something went wrong!");
+            this.UpdateOldSub(fullname);
         }
-
     }
 
 
 
     UpdateOldSub(fullname) {
-        this.CheckSubList();
+        let subList = this.CheckSubList();
 
         let arrayOfFullnames = [];
-        this.subList.forEach(value => {
+        subList.forEach(value => {
             arrayOfFullnames.push(value.fullname.toLowerCase());
         })
 
         let subIndex = arrayOfFullnames.indexOf(fullname.toLowerCase()); // If array don't have value, it will return -1.
 
         // Deleted the old user.
-        this.subList.splice(subIndex, 1); 
+        subList.splice(subIndex, 1);
 
         let oldSub = this.SubCreator(this.FeeDeterminer(false, this.period));
-        this.subList.push(oldSub);
-        localStorage.setItem("subList", JSON.stringify(this.subList));
+        subList.push(oldSub);
+
+        localStorage.setItem("subList", JSON.stringify(subList));
 
         //Refresh the page 
         location.reload();
@@ -64,11 +58,11 @@ class GymBase {
 
 
     AddNewSub() {
-        this.CheckSubList();
+        let subList = this.CheckSubList();
         let newSub = this.SubCreator(this.FeeDeterminer(true, this.period));
-        this.subList.push(newSub);
-        localStorage.setItem("subList", JSON.stringify(this.subList));
-        
+        subList.push(newSub);
+        localStorage.setItem("subList", JSON.stringify(subList));
+
         //Refresh the page 
         location.reload();
     }
@@ -76,30 +70,40 @@ class GymBase {
 
     // İf localStorage don't have subList, create new one as empty. Else, get subList.
     CheckSubList() {
-        if (localStorage.getItem("subList") === null) {
-            this.subList = [];
-        } else {
-            this.subList = JSON.parse(localStorage.getItem("subList"));
+        let subList = [];
+
+        if (localStorage.getItem("subList") != null) {
+            subList = JSON.parse(localStorage.getItem("subList"));
         }
+
+        return subList;
+    }
+
+
+    CheckPriceList() {
+        this.priceList = JSON.parse(localStorage.getItem("priceList"));
     }
 
 
     FeeDeterminer(isNewSub, period) {
+        this.CheckPriceList();
+
         let discountRate = 15;
         let normalFee;
 
         switch (period) {
             case "1":
-                normalFee = 1500;
+                normalFee = this.priceList[0].package1;
                 break;
             case "3":
-                normalFee = 3500;
+                normalFee = this.priceList[1].package3;
                 break;
             case "6":
-                normalFee = 5500;
+                normalFee = this.priceList[2].package6;
+
                 break;
             case "12":
-                normalFee = 9000;
+                normalFee = this.priceList[3].package12;
                 break;
         }
 
@@ -135,18 +139,19 @@ class GymBase {
 
 
     PageLoaded() {
-        this.CheckSubList();
+        let subList = this.CheckSubList();
 
-        
+        // List the subs to the frontend
+
         const mainGrid = document.querySelector(".grid-div");
-        
-        this.subList.forEach(sub => {
+
+        subList.forEach(sub => {
             const gridItem = document.createElement("div");
             gridItem.className = "grid-item";
 
             // if period is one month, don't write "one months"
             let monthText = "Months";
-            if (sub.period == 1){
+            if (sub.period == 1) {
                 monthText = "Month";
             }
 
@@ -167,61 +172,115 @@ class GymBase {
 
             gridItem.innerHTML = cardContent;
             mainGrid.appendChild(gridItem);
-
-
         })
+
+
+
+        // If there isn't priceList in the localStorage, create new one.
+
+        let priceList = localStorage.getItem("priceList");
+        if (priceList == null) {
+
+            let defaultPrices =
+                [
+                    { package1: 1500 },
+                    { package3: 3500 },
+                    { package6: 5500 },
+                    { package12: 9000 }
+                ]
+
+
+            localStorage.setItem("priceList", JSON.stringify(defaultPrices));
+        }
     }
 
 
-    IDGenerator(){
-        this.CheckSubList();
+    IDGenerator() {
+        let subList = this.CheckSubList();
         let IDList = [];
-        
-        this.subList.forEach(sub => IDList.push(sub.id));
 
-        for(let i=0; i<IDList.length+1; i++){
-            if (IDList.includes(i)){
+        subList.forEach(sub => IDList.push(sub.id));
+
+        for (let i = 0; i < IDList.length + 1; i++) {
+            if (IDList.includes(i)) {
                 continue;
-            }else{
+            } else {
                 return i;
             }
         }
     }
 
-    DeleteSub(deleteButton){
-        console.log(deleteButton);
-        this.CheckSubList();
+    DeleteSub(deleteButton) {
+
+        let subList = this.CheckSubList();
         let deleteButtonID = deleteButton.dataset.id;
 
         //Delete from FrontEnd
         deleteButton.parentElement.parentElement.remove();
 
         //Delete from BackEnd
-        this.subList.forEach(sub=>{
-            if (sub.id == deleteButtonID){
+        subList.forEach(sub => {
+            if (sub.id == deleteButtonID) {
                 this.DeleteFromStorage(deleteButtonID);
             }
         })
     }
 
 
-    DeleteFromStorage(ID){
-        this.CheckSubList();
+    DeleteFromStorage(ID) {
+        let subList = this.CheckSubList();
 
-        this.subList.forEach((sub,index)=>{
-            if (ID == sub.id){
-                this.subList.splice(index,1);
-                localStorage.setItem("subList", JSON.stringify(this.subList));
+        subList.forEach((sub, index) => {
+            if (ID == sub.id) {
+                subList.splice(index, 1);
+                localStorage.setItem("subList", JSON.stringify(subList));
             }
         });
     }
 
 
-    DeleteAllSubs(){
+    DeleteAllSubs() {
         let newSubList = [];
 
         localStorage.setItem("subList", JSON.stringify(newSubList));
 
         location.reload();
+    }
+
+
+    UpdatePrice(packageName, newPrice) {
+        this.CheckPriceList();
+
+        switch (packageName) {
+            case "package1":
+                this.priceList[0].package1 = newPrice;
+                break;
+            case "package3":
+                this.priceList[1].package3 = newPrice;
+                break;
+            case "package6":
+                this.priceList[2].package6 = newPrice;
+                break;
+            case "package12":
+                this.priceList[3].package12 = newPrice;
+                break;
+        }
+        localStorage.setItem("priceList", JSON.stringify(this.priceList));
+    }
+
+
+    FilterSub(filterValue) {
+        let subList = document.querySelectorAll(".grid-item");
+        let filterText = filterValue.toLowerCase().trim();
+
+
+        subList.forEach(sub => {
+            let subFullname = sub.children[0].children[0].innerHTML.toLowerCase()
+            if (subFullname.includes(filterText)) {
+                sub.style.display = "block";
+            } else {
+                sub.style.display = "none";
+            }
+        })
     }
 }
