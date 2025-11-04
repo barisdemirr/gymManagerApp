@@ -59,7 +59,10 @@ class GymBase {
 
     AddNewSub() {
         let subList = this.CheckSubList();
+
+        // SubCreator takes fee as parameter, we set the fee in FeeDeterminer and send it as parameter.
         let newSub = this.SubCreator(this.FeeDeterminer(true, this.period));
+
         subList.push(newSub);
         localStorage.setItem("subList", JSON.stringify(subList));
 
@@ -68,7 +71,7 @@ class GymBase {
     }
 
 
-    // İf localStorage don't have subList, create new one as empty. Else, get subList.
+    // İf localStorage don't have subList, create new one as empty. Else, take subList.
     CheckSubList() {
         let subList = [];
 
@@ -80,6 +83,7 @@ class GymBase {
     }
 
 
+    // We get the priceList from localStorage
     CheckPriceList() {
         this.priceList = JSON.parse(localStorage.getItem("priceList"));
     }
@@ -91,6 +95,7 @@ class GymBase {
         let discountRate = 15;
         let normalFee;
 
+        // We determine the fee from priceList based on the subscription period.
         switch (period) {
             case "1":
                 normalFee = this.priceList[0].package1;
@@ -141,7 +146,7 @@ class GymBase {
     PageLoaded() {
         let subList = this.CheckSubList();
 
-        // List the subs to the frontend
+        // List the subs to the frontend =>
 
         const mainGrid = document.querySelector(".grid-div");
 
@@ -174,9 +179,10 @@ class GymBase {
             mainGrid.appendChild(gridItem);
         })
 
+        // <=
 
 
-        // If there isn't priceList in the localStorage, create new one.
+        // If there isn't priceList in the localStorage, create new one with default prices. =>
 
         let priceList = localStorage.getItem("priceList");
         if (priceList == null) {
@@ -192,15 +198,21 @@ class GymBase {
 
             localStorage.setItem("priceList", JSON.stringify(defaultPrices));
         }
+
+        // <=
     }
 
 
+
+    // This function ensures that each subscriber has a unique ID.
     IDGenerator() {
         let subList = this.CheckSubList();
         let IDList = [];
 
+        // Load all existing IDs
         subList.forEach(sub => IDList.push(sub.id));
 
+        // return the smallest unique id
         for (let i = 0; i < IDList.length + 1; i++) {
             if (IDList.includes(i)) {
                 continue;
@@ -213,12 +225,12 @@ class GymBase {
     DeleteSub(deleteButton) {
 
         let subList = this.CheckSubList();
-        let deleteButtonID = deleteButton.dataset.id;
+        let deleteButtonID = deleteButton.dataset.id; // dataset.id uses for data-id which is html attribute
 
         //Delete from FrontEnd
         deleteButton.parentElement.parentElement.remove();
 
-        //Delete from BackEnd
+        //Delete from BackEnd (from LocalStorage)
         subList.forEach(sub => {
             if (sub.id == deleteButtonID) {
                 this.DeleteFromStorage(deleteButtonID);
@@ -240,17 +252,18 @@ class GymBase {
 
 
     DeleteAllSubs() {
-        let newSubList = [];
+        let emptySubList = [];
 
-        localStorage.setItem("subList", JSON.stringify(newSubList));
+        localStorage.setItem("subList", JSON.stringify(emptySubList));
 
+        // Refresh the page
         location.reload();
     }
 
 
     UpdatePrice(packageName, newPrice) {
         this.CheckPriceList();
-
+        
         switch (packageName) {
             case "package1":
                 this.priceList[0].package1 = newPrice;
@@ -275,7 +288,8 @@ class GymBase {
 
 
         subList.forEach(sub => {
-            let subFullname = sub.children[0].children[0].innerHTML.toLowerCase()
+            let subFullname = sub.children[0].children[0].innerHTML.toLowerCase();
+            
             if (subFullname.includes(filterText)) {
                 sub.style.display = "block";
             } else {
